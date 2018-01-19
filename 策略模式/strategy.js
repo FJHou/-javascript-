@@ -61,6 +61,7 @@ console.log(bouns.getMoney())
   }
   console.log(getMoney('C', 500)) // 1000
 })()
+
 // 表单提交策略模式
 ;(function() {
   var strategies = {
@@ -84,5 +85,7 @@ console.log(bouns.getMoney())
     }
   }
 
-  
+  var Validate = function() {
+
+  }
 })
