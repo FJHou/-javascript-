@@ -75,10 +75,8 @@ console.log(bouns.getMoney())
         return errMsg
       }
     },
-    'isMobile': function(value, mobileRule,errMsg) {
-      if (!(mobileRule instanceof RegExp)) {
-        return console.log('mobileRule 必须为正则表达式！')
-      }
+    'isMobile': function(value, errMsg) {
+      var mobileRule = /^1[3|5|8]\d{9}$/
       if (!mobileRule.test(value)) {
         return errMsg
       }
@@ -86,6 +84,54 @@ console.log(bouns.getMoney())
   }
 
   var Validate = function() {
-
+    this.cach = []
   }
-})
+
+  Validate.prototype.add = function (dom, rules) {
+    var slef = this
+    for (var i = 0, rule; rule = rules[i++];) {
+      (function (rule) {
+        var strategyArr = rule.strategy.split(':')
+        var errMsg = rule.errMsg
+        slef.cach.push(function() {
+          var strategy = strategyArr.shift()
+          strategyArr.unshift(dom)
+          strategyArr.push(errMsg)
+          console.log(strategyArr)
+          return strategies[strategy].apply(dom, strategyArr)
+        })
+      })(rule)
+    }
+  }
+
+  Validate.prototype.start = function () {
+    for (var i = 0, validateFn; validateFn = this.cach[i++];) {
+      let errMsg = validateFn()
+      if (errMsg) {
+        return errMsg
+      }
+    }
+  }
+
+  var validateFn = function() {
+    let validate = new Validate()
+    validate.add(input.value, [
+      {strategy: 'isNoEmpty', errMsg: '不能为空'},
+      {strategy: 'isMobile', errMsg: '不是手机号'}
+    ])
+    let err = validate.start()
+    return err
+  }
+
+  let input = document.getElementById('account')
+  let button = document.getElementById('accountValidate')
+
+  button.addEventListener('click', function() {
+    var err = validateFn()
+    if (err) {
+      alert(err)
+      return false
+    }
+  })
+  
+})()
