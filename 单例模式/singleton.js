@@ -67,3 +67,28 @@
 })
 
 // 惰性单例
+// 简单的惰性单例
+;(function() {
+  var createDialog = function() {
+    var dialog = document.createElement('div')
+    dialog.classList.add('dialog')
+    dialog.style.display = 'none'
+    dialog.innerHTML = '这是个dialog'
+    document.body.appendChild(dialog)
+    return dialog  
+  }
+
+  var getSingle = function(fn) {
+    var single = null
+    return function() {
+      return single || (single = fn.apply(this, arguments))
+    }
+  }
+  
+  var creatSingeLoginLayer = getSingle(createDialog)
+
+  document.getElementById('showDialog').addEventListener('click', function() {
+    var dialog = creatSingeLoginLayer()
+    dialog.style.display = 'block'
+  })
+})()
