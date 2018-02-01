@@ -125,5 +125,8 @@
     watcher.subscribe('打豆豆', () => {
       console.log('豆豆：我被人打了！')
     })
+    watcher.subscribe('打豆豆', () => {
+      console.log('路人：豆豆被人打了！')
+    })
     watcher.broadcast('打豆豆')
   })()
