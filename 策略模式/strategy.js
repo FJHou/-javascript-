@@ -82,36 +82,69 @@ console.log(bouns.getMoney())
       }
     }
   }
-
-  var Validate = function() {
-    this.cach = []
+/**
+ * ES6 写法
+ */
+class Validate {
+  constructor () {
+    this.cache = [];
   }
 
-  Validate.prototype.add = function (dom, rules) {
-    var slef = this
-    for (var i = 0, rule; rule = rules[i++];) {
-      (function (rule) {
-        var strategyArr = rule.strategy.split(':')
-        var errMsg = rule.errMsg
-        slef.cach.push(function() {
-          var strategy = strategyArr.shift()
-          strategyArr.unshift(dom)
+  add (value, rules) {
+    // let self = this
+    // console.log(this)
+    for (let i = 0, rule; rule = rules[i++];) {
+      // function (rule) {
+        let strategyArr = rule.strategy.split(':')
+        let errMsg = rule.errMsg
+        this.cache.push(() => {
+          let strategy = strategyArr.shift()
+          strategyArr.unshift(value)
           strategyArr.push(errMsg)
-          console.log(strategyArr)
-          return strategies[strategy].apply(dom, strategyArr)
+          return strategies[strategy].apply(value, strategyArr)
         })
-      })(rule)
+      // })(rule)
     }
   }
 
-  Validate.prototype.start = function () {
-    for (var i = 0, validateFn; validateFn = this.cach[i++];) {
+  start () {
+    for (var i = 0, validateFn; validateFn = this.cache[i++];) {
       let errMsg = validateFn()
       if (errMsg) {
         return errMsg
       }
     }
   }
+}
+  // var Validate = function() {
+  //   this.cach = []
+  // }
+
+  // Validate.prototype.add = function (value, rules) {
+  //   var slef = this
+  //   for (var i = 0, rule; rule = rules[i++];) {
+  //     (function (rule) {
+  //       var strategyArr = rule.strategy.split(':')
+  //       var errMsg = rule.errMsg
+  //       slef.cach.push(function() {
+  //         var strategy = strategyArr.shift()
+  //         strategyArr.unshift(value)
+  //         strategyArr.push(errMsg)
+  //         console.log(strategyArr)
+  //         return strategies[strategy].apply(valuedom, strategyArr)
+  //       })
+  //     })(rule)
+  //   }
+  // }
+
+  // Validate.prototype.start = function () {
+  //   for (var i = 0, validateFn; validateFn = this.cach[i++];) {
+  //     let errMsg = validateFn()
+  //     if (errMsg) {
+  //       return errMsg
+  //     }
+  //   }
+  // }
 
   var validateFn = function() {
     let validate = new Validate()
