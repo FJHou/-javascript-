@@ -91,19 +91,15 @@ class Validate {
   }
 
   add (value, rules) {
-    // let self = this
-    // console.log(this)
     for (let i = 0, rule; rule = rules[i++];) {
-      // function (rule) {
-        let strategyArr = rule.strategy.split(':')
-        let errMsg = rule.errMsg
-        this.cache.push(() => {
-          let strategy = strategyArr.shift()
-          strategyArr.unshift(value)
-          strategyArr.push(errMsg)
-          return strategies[strategy].apply(value, strategyArr)
-        })
-      // })(rule)
+      let strategyArr = rule.strategy.split(':')
+      let errMsg = rule.errMsg
+      this.cache.push(() => {
+        let strategy = strategyArr.shift()
+        strategyArr.unshift(value)
+        strategyArr.push(errMsg)
+        return strategies[strategy].apply(value, strategyArr)
+      })
     }
   }
 
